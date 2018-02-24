@@ -29,4 +29,9 @@ class ExampleUnitTest {
 //        println(elements.toString())
 
     }
+
+    @Test
+    fun testList() {
+        val list: List<String> = arrayListOf()
+    }
 }

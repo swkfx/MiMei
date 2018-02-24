@@ -1,7 +1,6 @@
 package com.fangx.mimei.ui.activities
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING
@@ -10,14 +9,14 @@ import com.fangx.mimei.R
 import com.fangx.mimei.data.server.MeiList
 import com.fangx.mimei.data.server.MiMeiRequest
 import com.fangx.mimei.ui.adapters.HomeListAdapter
+import com.fangx.mimei.ui.base.BaseActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.info
 import org.jetbrains.anko.uiThread
 
-class MainActivity : AppCompatActivity(), AnkoLogger {
+class MainActivity : BaseActivity() {
 
     private val PAGE_SIZE: Int = 10 //一页10个
 

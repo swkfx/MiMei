@@ -109,6 +109,7 @@ class HomeListAdapter(var data: ArrayList<Mei>?) : RecyclerView.Adapter<HomeList
                             image.viewTreeObserver.removeOnGlobalLayoutListener(this)
                             Picasso.with(itemView.ctx)
                                     .load(imageUrl)
+                                    .placeholder(R.drawable.img_place_holder_2)
                                     .resize(targetWidth, targetHeight)
                                     .centerCrop()
                                     .tag(itemView.ctx)
@@ -118,6 +119,7 @@ class HomeListAdapter(var data: ArrayList<Mei>?) : RecyclerView.Adapter<HomeList
                 } else {
                     Picasso.with(itemView.ctx)
                             .load(imageUrl)
+                            .placeholder(R.drawable.img_place_holder_2)
                             .resize(targetWidth, targetHeight)
                             .centerCrop()
                             .tag(itemView.ctx)
