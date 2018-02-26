@@ -88,4 +88,10 @@ class MiMeiDb(
                 MiMeiListTable.IMAGE_URL to it.imageUrl,
                 MiMeiListTable.COLLECT to if (it.collect) 1 else 0)
     }
+
+    fun updateCollect(it: MiMei) = dbHelper.use {
+        val sql = "${MiMeiListTable.ML_ID} = '${it.ml_id}'"
+        update(MiMeiListTable.NAME,
+                MiMeiListTable.COLLECT to if (it.collect) 1 else 0).whereArgs(sql).exec()
+    }
 }

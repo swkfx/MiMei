@@ -5,16 +5,15 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING
 import android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING
+import android.widget.ImageView
 import com.fangx.mimei.R
+import com.fangx.mimei.data.db.MiMeiDb
 import com.fangx.mimei.domain.commands.RequestListCommand
 import com.fangx.mimei.ui.adapters.HomeListAdapter
 import com.fangx.mimei.ui.base.BaseActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.info
-import org.jetbrains.anko.toast
-import org.jetbrains.anko.uiThread
+import org.jetbrains.anko.*
 
 class MainActivity : BaseActivity() {
 
@@ -94,7 +93,26 @@ class MainActivity : BaseActivity() {
                 }
             }, 1000)
         }
-
+        homeListAdapter.setOnItemClickListener { position, view, adapter ->
+            when (view.id) {
+                R.id.cv_list_item -> { //click item
+                    //启动详情页
+                    val item = homeListAdapter.data?.get(position)
+                    startActivity<DetailActivity>(DetailActivity.KEY_ML_ID to item?.ml_id)
+                }
+                R.id.ivCollect -> {
+                    val item = homeListAdapter.data?.get(position)
+                    item?.collect = !item!!.collect
+                    val ivCollect = view as ImageView
+                    ivCollect.isSelected = item.collect
+                    //保存收藏
+                    val db = MiMeiDb()
+                    db.updateCollect(item)
+                }
+                else -> {
+                }
+            }
+        }
         initPicasso(homeList)
 
 

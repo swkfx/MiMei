@@ -6,6 +6,7 @@
                                     android:layout_height="200dp"
                                     android:layout_margin="8dp"
                                     android:gravity="center_vertical"
+                                    android:id="@+id/cv_list_item"
                                     app:cardCornerRadius="@dimen/cardview_default_radius">
 
     <LinearLayout
@@ -28,11 +29,12 @@
                 tools:text="test~~"/>
 
             <ImageView
+                android:id="@+id/ivCollect"
                 android:layout_marginLeft="8dp"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_gravity="center"
-                android:src="@drawable/un_collect"/>
+                android:src="@drawable/selector_item_collect"/>
 
 
         </LinearLayout>

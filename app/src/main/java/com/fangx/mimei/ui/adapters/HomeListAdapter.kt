@@ -26,9 +26,9 @@ import java.util.*
  */
 class HomeListAdapter(var data: ArrayList<MiMei>?) : RecyclerView.Adapter<HomeListAdapter.BaseHolder>(), AnkoLogger {
     companion object {
-        val ITEM_VIEW = 0
-        val EMPTY_VIEW = 1
-        val FOOTER_VIEW = 2
+        const val ITEM_VIEW = 0
+        const val EMPTY_VIEW = 1
+        const val FOOTER_VIEW = 2
 
         var targetWidth: Int = 0
         var targetHeight: Int = 0
@@ -37,6 +37,7 @@ class HomeListAdapter(var data: ArrayList<MiMei>?) : RecyclerView.Adapter<HomeLi
     var loadMoreEnable: Boolean = false //是否需要加载更多.
     private var loading: Boolean = false
     private lateinit var listener: () -> Unit
+    private lateinit var itemClickListener: (position: Int, view: View, adapter: RecyclerView.Adapter<HomeListAdapter.BaseHolder>) -> Unit
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseHolder {
         return when (viewType) {
@@ -82,7 +83,7 @@ class HomeListAdapter(var data: ArrayList<MiMei>?) : RecyclerView.Adapter<HomeLi
         val viewType = getItemViewType(position)
         when (viewType) {
             ITEM_VIEW -> {
-                holder.bindData(data!![position])
+                holder.bindData(position, data!![position])
             }
             else -> {
             }
@@ -91,7 +92,7 @@ class HomeListAdapter(var data: ArrayList<MiMei>?) : RecyclerView.Adapter<HomeLi
 
     inner class BaseHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bindData(item: MiMei) {
+        fun bindData(position: Int, item: MiMei) {
             if (itemViewType == ITEM_VIEW) {
                 val time: String = Utils.formatTime(item.publishedAt)
                 val title = StringBuilder()
@@ -126,7 +127,15 @@ class HomeListAdapter(var data: ArrayList<MiMei>?) : RecyclerView.Adapter<HomeLi
                             .into(image)
 
                 }
+                itemView.ivCollect.isSelected = item.collect
 
+                //listener
+                itemView.ivCollect.setOnClickListener {
+                    itemClickListener.invoke(position, it, this@HomeListAdapter)
+                }
+                itemView.setOnClickListener {
+                    itemClickListener.invoke(position, it, this@HomeListAdapter)
+                }
 
             }
         }
@@ -185,5 +194,8 @@ class HomeListAdapter(var data: ArrayList<MiMei>?) : RecyclerView.Adapter<HomeLi
         }
     }
 
+    fun setOnItemClickListener(l: (position: Int, view: View, adapter: RecyclerView.Adapter<HomeListAdapter.BaseHolder>) -> Unit) {
+        this.itemClickListener = l
+    }
 
 }
