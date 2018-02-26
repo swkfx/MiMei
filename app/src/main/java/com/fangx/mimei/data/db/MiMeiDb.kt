@@ -85,6 +85,7 @@ class MiMeiDb(
                 MiMeiListTable.PUBLISHEDAT to it.publishedAt,
                 MiMeiListTable.RAND_ID to it.rand_id,
                 MiMeiListTable.UPDATED_AT to it.updated_at,
+                MiMeiListTable.IMAGE_URL to it.imageUrl,
                 MiMeiListTable.COLLECT to if (it.collect) 1 else 0)
     }
 }

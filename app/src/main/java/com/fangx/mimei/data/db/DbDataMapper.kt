@@ -24,7 +24,8 @@ class DbDataMapper {
     }
 
     private fun convertDbToMiMei(it: ListDbModel): MiMei = with(it) {
-        MiMei(ml_id, title, content, created_at, publishedAt, rand_id, updated_at, collect > 0)
+
+        MiMei(ml_id, title, content, created_at, publishedAt, rand_id, updated_at, image_url, collect > 0)
     }
 
     fun convertHistoryToDomain(it: List<String>): List<String> = it.map {

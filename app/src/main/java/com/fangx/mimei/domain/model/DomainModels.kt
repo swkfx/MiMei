@@ -24,4 +24,5 @@ data class MiMei(
         var publishedAt: String,
         var rand_id: String,
         var updated_at: String,
+        var imageUrl: String,
         var collect: Boolean)

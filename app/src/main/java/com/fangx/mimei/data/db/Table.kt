@@ -19,6 +19,7 @@ object MiMeiListTable {
     const val TITLE = "title"
     const val UPDATED_AT = "updated_at"
     const val COLLECT = "collect"
+    const val IMAGE_URL = "image_url"
 }
 
 object MiMeiDetailTable {

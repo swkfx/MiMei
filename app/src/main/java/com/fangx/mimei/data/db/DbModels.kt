@@ -16,6 +16,7 @@ class ListDbModel(val map: MutableMap<String, Any?>) {
     var publishedAt: String by map
     var rand_id: String by map
     var updated_at: String by map
+    var image_url: String by map
     var collect: Int by map
 
     constructor(ml_id: String,
@@ -25,6 +26,7 @@ class ListDbModel(val map: MutableMap<String, Any?>) {
                 publishedAt: String,
                 rand_id: String,
                 updated_at: String,
+                imageUrl: String,
                 collect: Int) : this(HashMap()) {
 
         this.ml_id = ml_id
@@ -34,6 +36,7 @@ class ListDbModel(val map: MutableMap<String, Any?>) {
         this.publishedAt = publishedAt
         this.rand_id = rand_id
         this.updated_at = updated_at
+        this.image_url = imageUrl
         this.collect = collect
 
     }

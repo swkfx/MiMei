@@ -2,6 +2,7 @@ package com.fangx.mimei.data.server
 
 import com.fangx.mimei.domain.model.MiMei
 import com.fangx.mimei.domain.model.MiMeiList
+import org.jsoup.Jsoup
 
 /**
  * <pre>
@@ -27,6 +28,7 @@ class ServerDataMapper {
     }
 
     private fun convertMeiToDomain(it: Mei): MiMei = with(it) {
-        MiMei(_id, title, content, created_at, publishedAt, rand_id, updated_at, false)
+        val imageUrl: String = Jsoup.parse(content).selectFirst("img").attr("src")
+        MiMei(_id, title, content, created_at, publishedAt, rand_id, updated_at, imageUrl, false)
     }
 }

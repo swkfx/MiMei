@@ -31,6 +31,7 @@ class DbHelper : ManagedSQLiteOpenHelper(App.instance, DB_NAME, null, DB_VERSION
                 MiMeiListTable.PUBLISHEDAT to TEXT,
                 MiMeiListTable.UPDATED_AT to TEXT,
                 MiMeiListTable.TITLE to TEXT,
+                MiMeiListTable.IMAGE_URL to TEXT,
                 MiMeiListTable.COLLECT to INTEGER)
 
         db?.createTable(MiMeiDetailTable.NAME, true,

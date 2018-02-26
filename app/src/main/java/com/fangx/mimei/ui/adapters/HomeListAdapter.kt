@@ -13,7 +13,6 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_home_list.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
-import org.jsoup.Jsoup
 import java.lang.StringBuilder
 import java.util.*
 
@@ -98,7 +97,8 @@ class HomeListAdapter(var data: ArrayList<MiMei>?) : RecyclerView.Adapter<HomeLi
                 val title = StringBuilder()
                 title.append(time).append("\t\t").append(item.title)
                 itemView.title.text = title.toString()
-                val imageUrl: String = Jsoup.parse(item.content).selectFirst("img").attr("src")
+                //这个是个耗时操作 不能放在这里做 会引起卡顿.
+                //val image_url: String = Jsoup.parse(item.content).selectFirst("img").attr("src")
                 val image = itemView.image
                 if (targetWidth * targetHeight == 0) {
                     image.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
@@ -108,7 +108,7 @@ class HomeListAdapter(var data: ArrayList<MiMei>?) : RecyclerView.Adapter<HomeLi
                             info { "targetWidth = $targetWidth , targetHeight = $targetHeight" }
                             image.viewTreeObserver.removeOnGlobalLayoutListener(this)
                             Picasso.with(itemView.ctx)
-                                    .load(imageUrl)
+                                    .load(item.imageUrl)
                                     .placeholder(R.drawable.img_place_holder_2)
                                     .resize(targetWidth, targetHeight)
                                     .centerCrop()
@@ -118,7 +118,7 @@ class HomeListAdapter(var data: ArrayList<MiMei>?) : RecyclerView.Adapter<HomeLi
                     })
                 } else {
                     Picasso.with(itemView.ctx)
-                            .load(imageUrl)
+                            .load(item.imageUrl)
                             .placeholder(R.drawable.img_place_holder_2)
                             .resize(targetWidth, targetHeight)
                             .centerCrop()
