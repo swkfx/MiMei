@@ -6,7 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import com.fangx.mimei.R
-import com.fangx.mimei.data.server.Mei
+import com.fangx.mimei.domain.model.MiMei
+import com.fangx.mimei.extensions.Utils
 import com.fangx.mimei.extensions.ctx
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_home_list.view.*
@@ -14,7 +15,6 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jsoup.Jsoup
 import java.lang.StringBuilder
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -25,7 +25,7 @@ import java.util.*
  *      desc   :
  * </pre>
  */
-class HomeListAdapter(var data: ArrayList<Mei>?) : RecyclerView.Adapter<HomeListAdapter.BaseHolder>(), AnkoLogger {
+class HomeListAdapter(var data: ArrayList<MiMei>?) : RecyclerView.Adapter<HomeListAdapter.BaseHolder>(), AnkoLogger {
     companion object {
         val ITEM_VIEW = 0
         val EMPTY_VIEW = 1
@@ -92,9 +92,9 @@ class HomeListAdapter(var data: ArrayList<Mei>?) : RecyclerView.Adapter<HomeList
 
     inner class BaseHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bindData(item: Mei) {
+        fun bindData(item: MiMei) {
             if (itemViewType == ITEM_VIEW) {
-                val time: String = formatTime(item.publishedAt)
+                val time: String = Utils.formatTime(item.publishedAt)
                 val title = StringBuilder()
                 title.append(time).append("\t\t").append(item.title)
                 itemView.title.text = title.toString()
@@ -132,15 +132,7 @@ class HomeListAdapter(var data: ArrayList<Mei>?) : RecyclerView.Adapter<HomeList
         }
     }
 
-    private fun formatTime(publishedAt: String): String {
-        //        2017-04-26T11:29:00.0Z
-        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'", Locale.getDefault())
-        val date = sdf.parse(publishedAt)
-        val newSdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return newSdf.format(date)
-    }
-
-    fun add(item: Mei) {
+    fun add(item: MiMei) {
         if (data == null) {
             data = ArrayList()
         }
@@ -153,13 +145,13 @@ class HomeListAdapter(var data: ArrayList<Mei>?) : RecyclerView.Adapter<HomeList
 
     }
 
-    fun addNew(newData: ArrayList<Mei>) {
+    fun addNew(newData: ArrayList<MiMei>) {
         data?.clear()
         data?.addAll(newData)
         notifyDataSetChanged()
     }
 
-    fun add(newData: ArrayList<Mei>) {
+    fun add(newData: ArrayList<MiMei>) {
         val size = data?.size ?: 0
         data?.addAll(newData)
         info("size=$size,newDataSize = ${newData.size}")

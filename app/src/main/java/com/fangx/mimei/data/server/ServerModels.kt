@@ -21,7 +21,9 @@ data class Mei(val title: String,
                val rand_id: String
 )
 
-data class MeiList(val error: Boolean, @SerializedName("results") val meiList: ArrayList<Mei>)
+data class MeiList(val error: Boolean = true,
+                   val errorMsg: String = "未知错误",
+                   @SerializedName("results") val meiList: ArrayList<Mei> = arrayListOf())
 
 
 /*"_id":"5a8a904d421aa91331a69d82",
@@ -50,3 +52,5 @@ data class MeiDetail(
         val url: String,
         val used: Boolean,
         val who: String)
+
+data class HistoryDateList(val error: Boolean, @SerializedName("results") val historyList: ArrayList<String>)

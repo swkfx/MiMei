@@ -32,6 +32,17 @@ class ExampleUnitTest {
 
     @Test
     fun testList() {
-        val list: List<String> = arrayListOf()
+        val listTest = ListTest()
+        listTest.list.forEach {
+            println("1-$it")
+        }
+        listTest.list.asReversed()
+        listTest.list.forEach {
+            println("2-$it")
+        }
+        val listTest1 = ListTest()
+        listTest1.list.forEach {
+            println("3-$it")
+        }
     }
 }

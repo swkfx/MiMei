@@ -8,7 +8,13 @@ package com.fangx.mimei.domain.model
  *      desc   :
  * </pre>
  */
-data class MiMeiList(val error: Boolean, val list: ArrayList<MiMei>)
+data class MiMeiList(val error: Boolean = true,
+                     val errorMsg: String = "",
+                     val list: ArrayList<MiMei> = arrayListOf()) {
+    fun size(): Int = list.size
+
+    constructor(err: Boolean, list: ArrayList<MiMei> = arrayListOf()) : this(err, "", list)
+}
 
 data class MiMei(
         var ml_id: String,

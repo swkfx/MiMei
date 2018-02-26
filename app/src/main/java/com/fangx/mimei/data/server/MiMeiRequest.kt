@@ -1,5 +1,8 @@
 package com.fangx.mimei.data.server
 
+import android.content.Context
+import android.net.ConnectivityManager
+import com.fangx.mimei.ui.base.App
 import com.google.gson.Gson
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -13,12 +16,17 @@ import java.net.URL
  *      desc   :
  * </pre>
  */
-class MiMeiRequest(private val page: Int, private val pageSize: Int) : AnkoLogger {
+class MiMeiRequest(private val page: Int, private val pageSize: Int) : Request<MeiList>(), AnkoLogger {
     companion object {
-        val REQUEST_URL = "http://gank.io/api/history/content/"
+        const val REQUEST_URL = "http://gank.io/api/history/content/"
     }
 
-    fun excute(): MeiList {
+
+    override fun execute(): MeiList {
+        val service = App.instance.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (null == service.activeNetworkInfo || service.activeNetworkInfo.isAvailable.not()) {
+            return MeiList(true, "网络不可用")
+        }
         val jsonStr = URL(REQUEST_URL + pageSize.toString() + "/" + page.toString()).readText()
         info { jsonStr }
         return Gson().fromJson(jsonStr, MeiList::class.java)

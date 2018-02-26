@@ -13,13 +13,15 @@ import com.fangx.mimei.domain.model.MiMeiList
  */
 class ServerDataMapper {
     fun convertListToDomain(result: MeiList): MiMeiList = with(result) {
-        MiMeiList(error, convertMeisToDomain(meiList))
+        MiMeiList(error, errorMsg, convertMeisToDomain(meiList))
     }
 
     private fun convertMeisToDomain(meiList: ArrayList<Mei>): ArrayList<MiMei> {
         val list = arrayListOf<MiMei>()
-        meiList.forEach {
-            list.add(convertMeiToDomain(it))
+        if (meiList.isNotEmpty()) {
+            meiList.forEach {
+                list.add(convertMeiToDomain(it))
+            }
         }
         return list
     }

@@ -6,14 +6,14 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING
 import android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING
 import com.fangx.mimei.R
-import com.fangx.mimei.data.server.MeiList
-import com.fangx.mimei.data.server.MiMeiRequest
+import com.fangx.mimei.domain.commands.RequestListCommand
 import com.fangx.mimei.ui.adapters.HomeListAdapter
 import com.fangx.mimei.ui.base.BaseActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.info
+import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
 
 class MainActivity : BaseActivity() {
@@ -50,24 +50,20 @@ class MainActivity : BaseActivity() {
 
     private fun requestForNet() {
         doAsync {
-            val data = request()
+            val data = RequestListCommand(1, PAGE_SIZE).execute()
             uiThread {
-                if (data != null) {
-                    val homeListAdapter = homeList.adapter as HomeListAdapter
-                    if (data.error.not() && data.meiList.isNotEmpty()) {
-                        homeListAdapter.addNew(data.meiList)
-                    } else {
-                        homeListAdapter.addNew(arrayListOf())
-                    }
-                    homeListAdapter.loadMoreEnable = homeListAdapter.dataSize() >= PAGE_SIZE
+                val homeListAdapter = homeList.adapter as HomeListAdapter
+                if (data.error.not() && data.list.isNotEmpty()) {
+                    homeListAdapter.addNew(data.list)
+                } else {
+                    toast(data.errorMsg)
+                    homeListAdapter.addNew(arrayListOf())
                 }
+                homeListAdapter.loadMoreEnable = homeListAdapter.dataSize() >= PAGE_SIZE
             }
         }
     }
 
-    private fun request(): MeiList? {
-        return MiMeiRequest(1, PAGE_SIZE).excute()
-    }
 
     private fun initHomeList() {
         homeList.layoutManager = LinearLayoutManager(this)
@@ -78,18 +74,21 @@ class MainActivity : BaseActivity() {
             homeList.postDelayed({
                 info("loadMore...")
                 doAsync {
-                    val meiList = MiMeiRequest(homeListAdapter.dataSize() / PAGE_SIZE + 1, PAGE_SIZE).excute()
+                    val data = RequestListCommand(homeListAdapter.dataSize() / PAGE_SIZE + 1, PAGE_SIZE).execute()
                     uiThread {
                         val adapter = homeList.adapter as HomeListAdapter
                         adapter.loadMoreComplete()
                         //可以根据结果改变加载是完成还是出错.
-                        if (meiList.error.not()) {
+                        if (data.error.not()) {
                             val dataSize = adapter.dataSize()
-                            adapter.add(meiList.meiList)
-                            homeListAdapter.loadMoreEnable = meiList.meiList.size >= PAGE_SIZE
+                            adapter.add(data.list)
+                            homeListAdapter.loadMoreEnable = data.list.size >= PAGE_SIZE
                             info { "dataSize = ${dataSize + 1}" }
                             homeList.scrollToPosition(dataSize)
+                        } else {
+                            toast(data.errorMsg)
                         }
+
 
                     }
                 }
