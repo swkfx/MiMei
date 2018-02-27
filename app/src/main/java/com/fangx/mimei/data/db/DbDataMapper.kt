@@ -15,7 +15,7 @@ import com.fangx.mimei.extensions.Utils
 class DbDataMapper {
     fun convertToDomain(list: List<ListDbModel>): MiMeiList {
         return if (list.isNotEmpty()) {
-            val miMeiList = list.map { convertDbToMiMei(it) }
+            val miMeiList = list.map { convertDbMiMeiToDomain(it) }
             MiMeiList(false, ArrayList(miMeiList))
         } else {
             MiMeiList(true, "没有找到本地数据")
@@ -23,7 +23,7 @@ class DbDataMapper {
 
     }
 
-    private fun convertDbToMiMei(it: ListDbModel): MiMei = with(it) {
+    fun convertDbMiMeiToDomain(it: ListDbModel): MiMei = with(it) {
 
         MiMei(ml_id, title, content, created_at, publishedAt, rand_id, updated_at, image_url, collect > 0)
     }

@@ -39,13 +39,13 @@ data class MeiList(val error: Boolean = true,
   "used":true,
   "who":"Alex Mikhnev" */
 //url ->http://gank.io/api/day/2018/02/22
-data class MeiDetailList(val error: Boolean, @SerializedName("results") val MeiDetails: HashMap<String, ArrayList<MeiDetail>>)
+data class MeiDetailList(val error: Boolean = true, val errorMsg: String = "", @SerializedName("results") val MeiDetails: HashMap<String, ArrayList<MeiDetail>> = hashMapOf())
 
 data class MeiDetail(
         val _id: String,
         val createdAt: String,
         val desc: String,
-        val images: ArrayList<String>,
+        val images: ArrayList<String>?,
         val publishedAt: String,
         val source: String,
         val type: String,

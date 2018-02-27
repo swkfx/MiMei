@@ -30,6 +30,10 @@ object Utils {
         val newSdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return newSdf.format(date)
     }
+
+    fun formatParam(source: String): String {
+        return formatTime(source).replace("-", "/")
+    }
 }
 
 class NotNullSingleValueVar<T> : ReadWriteProperty<Any?, T> {

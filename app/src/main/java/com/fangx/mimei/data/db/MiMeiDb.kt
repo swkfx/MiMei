@@ -62,15 +62,7 @@ class MiMeiDb(
     }
 
     private fun SQLiteDatabase.insertIfNotExist(it: MiMei) {
-        val sql = "${MiMeiListTable.ML_ID} = '${it.ml_id}'"
-        val opt = select(MiMeiListTable.NAME)
-                .whereSimple(sql)
-                .parseOpt(object : MapRowParser<ListDbModel> {
-                    override fun parseRow(columns: Map<String, Any?>): ListDbModel {
-                        return ListDbModel(HashMap(columns))
-                    }
-
-                })
+        val opt = findMiMeiBy(it.ml_id)
         if (opt == null) {
             insert(it)
         }
@@ -93,5 +85,21 @@ class MiMeiDb(
         val sql = "${MiMeiListTable.ML_ID} = '${it.ml_id}'"
         update(MiMeiListTable.NAME,
                 MiMeiListTable.COLLECT to if (it.collect) 1 else 0).whereArgs(sql).exec()
+    }
+
+    fun findMiMeiBy(mlId: String) = dbHelper.use {
+        val sql = "${MiMeiListTable.ML_ID} = '$mlId'"
+        val opt = select(MiMeiListTable.NAME)
+                .whereSimple(sql)
+                .parseOpt(object : MapRowParser<ListDbModel> {
+                    override fun parseRow(columns: Map<String, Any?>): ListDbModel {
+                        return ListDbModel(HashMap(columns))
+                    }
+
+                })
+        opt?.let {
+            dataMapper.convertDbMiMeiToDomain(it)
+        }
+
     }
 }
