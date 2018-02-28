@@ -1,5 +1,6 @@
 package com.fangx.mimei.domain.datasource
 
+import com.fangx.mimei.domain.model.MiMeiDetail
 import com.fangx.mimei.domain.model.MiMeiList
 import org.jetbrains.anko.AnkoLogger
 
@@ -12,7 +13,10 @@ import org.jetbrains.anko.AnkoLogger
  * </pre>
  */
 interface MiMeiDataSource : AnkoLogger {
+
     fun requestList(page: Int, pageSize: Int): MiMeiList?
 
+
+    fun requestDetail(date: String, ml_id: String): MiMeiDetail?
 
 }

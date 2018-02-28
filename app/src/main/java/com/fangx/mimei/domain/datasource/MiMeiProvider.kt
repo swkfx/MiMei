@@ -2,6 +2,7 @@ package com.fangx.mimei.domain.datasource
 
 import com.fangx.mimei.data.db.MiMeiDb
 import com.fangx.mimei.data.server.GankIoServer
+import com.fangx.mimei.domain.model.MiMeiDetail
 import com.fangx.mimei.domain.model.MiMeiList
 
 /**
@@ -28,18 +29,29 @@ class MiMeiProvider(private val sources: List<MiMeiDataSource> = SOURCE) {
 
     }
 
+    fun requestDetail(date: String, ml_id: String): MiMeiDetail {
+        val detailForDb = sources[0].requestDetail(date, ml_id)
+        return if (detailForDb != null && !detailForDb.error) {
+            detailForDb
+        } else {
+            sources[1].requestDetail(date, ml_id)!!
+        }
+
+
+    }
+
 //    fun <T : Any> requestToSource(f: (MiMeiDataSource) -> T?): T = sources.firstResult { f(it) }
 
 
 }
 
-/*private fun <T, R : Any> Iterable<T>.firstResult(function: (T) -> R?): R {
-    for (element in this) {
-        val result = function(element)
-        if (result != null) {
-            return result
-        }
-    }
-    throw NoSuchElementException("No element matching predicate was found.")
-}*/
+//private fun <T, R : Any> Iterable<T>.firstResult(function: (T) -> R?): R {
+//    for (element in this) {
+//        val result = function(element)
+//        if (result != null) {
+//            return result
+//        }
+//    }
+//    throw NoSuchElementException("No element matching predicate was found.")
+//}
 

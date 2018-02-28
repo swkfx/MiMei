@@ -3,7 +3,9 @@ package com.fangx.mimei.data.db
 import android.database.sqlite.SQLiteDatabase
 import com.fangx.mimei.domain.datasource.MiMeiDataSource
 import com.fangx.mimei.domain.model.MiMei
+import com.fangx.mimei.domain.model.MiMeiDetail
 import com.fangx.mimei.domain.model.MiMeiList
+import com.google.gson.Gson
 import org.jetbrains.anko.db.*
 
 /**
@@ -18,6 +20,7 @@ class MiMeiDb(
         private val dbHelper: DbHelper = DbHelper.instance,
         private val dataMapper: DbDataMapper = DbDataMapper()
 ) : MiMeiDataSource {
+
 
     override fun requestList(page: Int, pageSize: Int) = dbHelper.use {
         val parseList = select(MiMeiListTable.NAME)
@@ -101,5 +104,45 @@ class MiMeiDb(
             dataMapper.convertDbMiMeiToDomain(it)
         }
 
+    }
+
+    override fun requestDetail(date: String, ml_id: String) = dbHelper.use {
+        val sql = "${MiMeiDetailTable.ML_ID} = ?"
+        val opts = select(MiMeiDetailTable.NAME)
+                .whereSimple(sql, ml_id)
+                .orderBy(MiMeiDetailTable.ID)
+                .parseList(object : MapRowParser<DetailDbModel> {
+                    override fun parseRow(columns: Map<String, Any?>): DetailDbModel {
+                        return DetailDbModel(HashMap(columns))
+                    }
+
+                })
+        opts.let {
+            dataMapper.convertDbDetailToDomain(it)
+        }
+    }
+
+    fun saveGankIo(gankIos: MiMeiDetail) = dbHelper.use {
+        gankIos.dataMap.values.forEach {
+            it.forEach {
+                var imageUrls: String? = null
+                if (it.images != null && !it.images.isEmpty()) {
+                    imageUrls = Gson().toJson(it.images)
+                }
+                val i = insert(MiMeiDetailTable.NAME,
+                        MiMeiDetailTable.ML_ID to it.ml_id,
+                        MiMeiDetailTable.MD_ID to it.md_id,
+                        MiMeiDetailTable.CREATEDAT to it.createdAt,
+                        MiMeiDetailTable.DESC to it.desc,
+                        MiMeiDetailTable.IMAGES to imageUrls,
+                        MiMeiDetailTable.PUBLISHEDAT to it.publishedAt,
+                        MiMeiDetailTable.TYPE to it.type,
+                        MiMeiDetailTable.URL to it.url,
+                        MiMeiDetailTable.USED to it.used,
+                        MiMeiDetailTable.WHO to it.who
+                )
+                println("insert = $i")
+            }
+        }
     }
 }

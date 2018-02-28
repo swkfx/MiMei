@@ -1,6 +1,7 @@
 package com.fangx.mimei.data.db
 
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import com.fangx.mimei.ui.base.App
 import org.jetbrains.anko.db.*
 
@@ -16,7 +17,7 @@ class DbHelper : ManagedSQLiteOpenHelper(App.instance, DB_NAME, null, DB_VERSION
 
     companion object {
         const val DB_NAME = "mimei.db"
-        const val DB_VERSION = 1
+        const val DB_VERSION = 2
         val instance: DbHelper by lazy { DbHelper() }
     }
 
@@ -40,16 +41,26 @@ class DbHelper : ManagedSQLiteOpenHelper(App.instance, DB_NAME, null, DB_VERSION
                 MiMeiDetailTable.MD_ID to TEXT,
                 MiMeiDetailTable.CREATEDAT to TEXT,
                 MiMeiDetailTable.DESC to TEXT,
+                MiMeiDetailTable.IMAGES to TEXT,
                 MiMeiDetailTable.PUBLISHEDAT to TEXT,
                 MiMeiDetailTable.TYPE to TEXT,
                 MiMeiDetailTable.URL to TEXT,
-                MiMeiDetailTable.USED to TEXT,
+                MiMeiDetailTable.USED to INTEGER,
                 MiMeiDetailTable.WHO to TEXT)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.dropTable(MiMeiListTable.NAME, true)
-        db?.dropTable(MiMeiDetailTable.NAME, true)
-        onCreate(db)
+        when (oldVersion) {
+            1 -> {
+                Log.d("DbHelper", "数据库升级,表${MiMeiDetailTable.NAME}中添加列 ${MiMeiDetailTable.IMAGES}")
+                db?.execSQL("alter table ${MiMeiDetailTable.NAME} add column ${MiMeiDetailTable.IMAGES} text")
+
+            }
+            else -> {
+                db?.dropTable(MiMeiListTable.NAME, true)
+                db?.dropTable(MiMeiDetailTable.NAME, true)
+                onCreate(db)
+            }
+        }
     }
 }

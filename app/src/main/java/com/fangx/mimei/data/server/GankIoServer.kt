@@ -2,6 +2,7 @@ package com.fangx.mimei.data.server
 
 import com.fangx.mimei.data.db.MiMeiDb
 import com.fangx.mimei.domain.datasource.MiMeiDataSource
+import com.fangx.mimei.domain.model.MiMeiDetail
 import com.fangx.mimei.domain.model.MiMeiList
 import org.jetbrains.anko.info
 
@@ -16,6 +17,18 @@ import org.jetbrains.anko.info
 class GankIoServer(private val dataMapper: ServerDataMapper = ServerDataMapper(),
                    private val miMeiDb: MiMeiDb = MiMeiDb()
 ) : MiMeiDataSource {
+
+
+    override fun requestDetail(date: String, ml_id: String): MiMeiDetail? {
+        val rsp = MiMeiDetailRequest(date).execute()
+        val gankIos = dataMapper.convertDetailToDomain(rsp, ml_id)
+        return if (!rsp.error) {
+            miMeiDb.saveGankIo(gankIos)
+            miMeiDb.requestDetail(date, ml_id)
+        } else {
+            gankIos
+        }
+    }
 
 
     override fun requestList(page: Int, pageSize: Int): MiMeiList {

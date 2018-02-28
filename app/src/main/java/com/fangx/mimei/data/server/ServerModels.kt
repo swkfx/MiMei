@@ -51,6 +51,6 @@ data class MeiDetail(
         val type: String,
         val url: String,
         val used: Boolean,
-        val who: String)
+        val who: String?)
 
 data class HistoryDateList(val error: Boolean, @SerializedName("results") val historyList: ArrayList<String>)

@@ -21,7 +21,7 @@ class MiMeiDetailRequest(private val date: String) : Request<MeiDetailList>() {
             val rsp = URL(REQUEST_URL + date).readText()
             Gson().fromJson(rsp, MeiDetailList::class.java)
         } else {
-            MeiDetailList()
+            MeiDetailList(true,"获取数据失败,请检查网络")
         }
     }
 }

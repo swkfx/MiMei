@@ -29,6 +29,7 @@ object MiMeiDetailTable {
     const val MD_ID = "md_id" // 此条数据自己的id
     const val CREATEDAT = "createdAt"
     const val DESC = "desc"
+    const val IMAGES = "images"
     const val PUBLISHEDAT = "publishedAt"
     const val TYPE = "type"
     const val URL = "url"

@@ -48,6 +48,7 @@ class DetailDbModel(val map: MutableMap<String, Any?>) {
     var md_id: String by map
     var createdAt: String by map
     var desc: String by map
+    var images: String by map
     var publishedAt: String by map
     var type: String by map
     var url: String by map
@@ -60,6 +61,7 @@ class DetailDbModel(val map: MutableMap<String, Any?>) {
             md_id: String,
             createdAt: String,
             desc: String,
+            images: String,
             publishedAt: String,
             type: String,
             url: String,
@@ -69,6 +71,7 @@ class DetailDbModel(val map: MutableMap<String, Any?>) {
         this.md_id = md_id
         this.createdAt = createdAt
         this.desc = desc
+        this.images = images
         this.publishedAt = publishedAt
         this.type = type
         this.url = url

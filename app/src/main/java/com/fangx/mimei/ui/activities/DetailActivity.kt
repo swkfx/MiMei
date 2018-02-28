@@ -20,10 +20,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.fangx.mimei.R
 import com.fangx.mimei.data.db.MiMeiDb
-import com.fangx.mimei.data.server.MeiDetail
-import com.fangx.mimei.data.server.MeiDetailList
-import com.fangx.mimei.data.server.MiMeiDetailRequest
+import com.fangx.mimei.domain.datasource.MiMeiProvider
+import com.fangx.mimei.domain.model.GankIo
 import com.fangx.mimei.domain.model.MiMei
+import com.fangx.mimei.domain.model.MiMeiDetail
 import com.fangx.mimei.extensions.Utils
 import com.fangx.mimei.ui.base.BaseActivity
 import com.fangx.mimei.ui.coustom.CenterAlignImageSpan
@@ -54,21 +54,21 @@ class DetailActivity : BaseActivity() {
             toast("数据异常")
             onBackPressed()
         }
-        val reqParams = Utils.formatParam(miMei!!.publishedAt)
+        val date = Utils.formatParam(miMei!!.publishedAt)
         doAsync {
-            val detail = MiMeiDetailRequest(reqParams).execute()
+            val detail = MiMeiProvider().requestDetail(date, mlId)
             uiThread {
                 if (detail.error.not()) {
                     initView(detail, miMei)
                 } else {
-                    toast("请求失败")
+                    toast(detail.errorMsg)
                 }
             }
         }
     }
 
-    private fun initView(detail: MeiDetailList, miMei: MiMei) {
-        val meiDetails = detail.MeiDetails
+    private fun initView(detail: MiMeiDetail, miMei: MiMei) {
+        val meiDetails = detail.dataMap
         for ((key, value) in meiDetails) {
             when (key) {
                 "福利" -> {
@@ -159,7 +159,7 @@ class DetailActivity : BaseActivity() {
         return tv
     }
 
-    private fun getItemTextView(item: MeiDetail): View {
+    private fun getItemTextView(item: GankIo): View {
         val ssb = SpannableStringBuilder("• ")
 
         addColorSpan(ssb, item.desc, "#6897BB")

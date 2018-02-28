@@ -1,5 +1,7 @@
 package com.fangx.mimei.domain.model
 
+import java.util.*
+
 /**
  * <pre>
  *      author : test
@@ -26,3 +28,21 @@ data class MiMei(
         var updated_at: String,
         var imageUrl: String,
         var collect: Boolean)
+
+
+data class MiMeiDetail(val error: Boolean = true,
+                       val errorMsg: String = "",
+                       val dataMap: HashMap<String, List<GankIo>> = hashMapOf())
+
+data class GankIo(
+        val ml_id: String,
+        val md_id: String,
+        val createdAt: String,
+        val desc: String,
+        val images: ArrayList<String>?,
+        val publishedAt: String,
+        val type: String,
+        val url: String,
+        val used: Boolean,
+        val who: String?
+)
