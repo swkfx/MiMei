@@ -23,6 +23,7 @@ import com.fangx.mimei.data.db.MiMeiDb
 import com.fangx.mimei.data.server.MeiDetail
 import com.fangx.mimei.data.server.MeiDetailList
 import com.fangx.mimei.data.server.MiMeiDetailRequest
+import com.fangx.mimei.domain.model.MiMei
 import com.fangx.mimei.extensions.Utils
 import com.fangx.mimei.ui.base.BaseActivity
 import com.fangx.mimei.ui.coustom.CenterAlignImageSpan
@@ -58,7 +59,7 @@ class DetailActivity : BaseActivity() {
             val detail = MiMeiDetailRequest(reqParams).execute()
             uiThread {
                 if (detail.error.not()) {
-                    initView(detail)
+                    initView(detail, miMei)
                 } else {
                     toast("请求失败")
                 }
@@ -66,12 +67,13 @@ class DetailActivity : BaseActivity() {
         }
     }
 
-    private fun initView(detail: MeiDetailList) {
+    private fun initView(detail: MeiDetailList, miMei: MiMei) {
         val meiDetails = detail.MeiDetails
         for ((key, value) in meiDetails) {
             when (key) {
                 "福利" -> {
-                    val cardView = getMiMeiView(value[0].url)
+                    val title: String = miMei.title
+                    val cardView = getMiMeiView(value[0].url, title)
                     contentLayout.addView(cardView, 0)
                 }
                 else -> {
@@ -84,7 +86,8 @@ class DetailActivity : BaseActivity() {
         }
     }
 
-    private fun getMiMeiView(imageUrl: String): CardView {
+
+    private fun getMiMeiView(imageUrl: String, title: String): CardView {
         val imageView = ImageView(this)
         //根据屏幕尺寸,重新动态计算图片的宽高
         val size = doAsyncResult {
@@ -121,15 +124,31 @@ class DetailActivity : BaseActivity() {
         val cardView = CardView(this)
         cardView.layoutParams = layoutParams
         cardView.setContentPadding(padding, padding, padding, padding)
-        cardView.addView(imageView)
+        val container = LinearLayout(this)
+        container.orientation = LinearLayout.VERTICAL
+        container.addView(getTitleView(title))
+        container.addView(imageView)
+        cardView.addView(container)
         return cardView
+    }
+
+    private fun getTitleView(title: String): View {
+        val tv = TextView(this)
+        tv.text = title
+        tv.textSize = 20f
+//        tv.paint.isFakeBoldText = true
+        tv.setTextColor(Color.parseColor("#3C3F41")) //6897BB
+        val layoutParams = LinearLayout.LayoutParams(matchParent, wrapContent)
+        layoutParams.bottomMargin = (displayMetrics.density * 8).toInt()
+        tv.layoutParams = layoutParams
+        return tv
     }
 
     private fun getTypeTextView(key: String): View {
         val tv = TextView(this)
         tv.text = key
         tv.textSize = 20f
-        tv.setTextColor(Color.parseColor("#000000"))
+        tv.setTextColor(Color.parseColor("#3C3F41"))
         val layoutParams = LinearLayout.LayoutParams(matchParent, wrapContent)
         layoutParams.leftMargin = (displayMetrics.density * 8).toInt()
         layoutParams.bottomMargin = (displayMetrics.density * 8).toInt()

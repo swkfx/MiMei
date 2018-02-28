@@ -29,8 +29,8 @@ class MainActivity : BaseActivity() {
 
     private fun initPicasso(homeList: RecyclerView) {
         val picasso = Picasso.with(this)
-        picasso.setIndicatorsEnabled(true)
-        picasso.isLoggingEnabled = true
+        //        picasso.setIndicatorsEnabled(true)//显示角标
+        //        picasso.isLoggingEnabled = true //显示日志
         homeList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
