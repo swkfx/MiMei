@@ -28,7 +28,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initPicasso(homeList: RecyclerView) {
-        val picasso = Picasso.with(this)
+        val picasso = Picasso.get()
         //        picasso.setIndicatorsEnabled(true)//显示角标
         //        picasso.isLoggingEnabled = true //显示日志
         homeList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -93,7 +93,7 @@ class MainActivity : BaseActivity() {
                 }
             }, 1000)
         }
-        homeListAdapter.setOnItemClickListener { position, view, adapter ->
+        homeListAdapter.setOnItemClickListener { position, view, _ ->
             when (view.id) {
                 R.id.cv_list_item -> { //click item
                     //启动详情页
@@ -120,7 +120,7 @@ class MainActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Picasso.with(this).cancelTag(this)
+        Picasso.get().cancelTag(this)
     }
 
 

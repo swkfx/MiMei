@@ -91,8 +91,9 @@ class DetailActivity : BaseActivity() {
         val imageView = ImageView(this)
         //根据屏幕尺寸,重新动态计算图片的宽高
         val size = doAsyncResult {
-            val bitmap = Picasso.with(this@DetailActivity)
-                    .load(imageUrl).get()
+            val bitmap = Picasso.get()
+                    .load(imageUrl)
+                    .get()
             if (bitmap != null) {
                 val width = bitmap.width
                 val height = bitmap.height
@@ -112,7 +113,7 @@ class DetailActivity : BaseActivity() {
         info {
             "scale=$scale , imageTargetWidth=$imageTargetWidth , imageTargetHeight=$imageTargetHeight"
         }
-        Picasso.with(this)
+        Picasso.get()
                 .load(imageUrl)
                 .placeholder(R.drawable.img_place_holder_2)
                 .resize(imageTargetWidth, imageTargetHeight)

@@ -108,7 +108,7 @@ class HomeListAdapter(var data: ArrayList<MiMei>?) : RecyclerView.Adapter<HomeLi
                             targetHeight = image.measuredHeight
                             info { "targetWidth = $targetWidth , targetHeight = $targetHeight" }
                             image.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                            Picasso.with(itemView.ctx)
+                            Picasso.get()
                                     .load(item.imageUrl)
                                     .placeholder(R.drawable.img_place_holder_2)
                                     .resize(targetWidth, targetHeight)
@@ -118,7 +118,7 @@ class HomeListAdapter(var data: ArrayList<MiMei>?) : RecyclerView.Adapter<HomeLi
                         }
                     })
                 } else {
-                    Picasso.with(itemView.ctx)
+                    Picasso.get()
                             .load(item.imageUrl)
                             .placeholder(R.drawable.img_place_holder_2)
                             .resize(targetWidth, targetHeight)
