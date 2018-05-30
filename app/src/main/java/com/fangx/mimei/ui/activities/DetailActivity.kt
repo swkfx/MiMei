@@ -1,6 +1,7 @@
 package com.fangx.mimei.ui.activities
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -14,6 +15,7 @@ import android.text.style.AbsoluteSizeSpan
 import android.text.style.DynamicDrawableSpan.ALIGN_BASELINE
 import android.text.style.ForegroundColorSpan
 import android.view.Gravity
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -43,8 +45,7 @@ class DetailActivity : BaseActivity() {
         setContentView(R.layout.activity_detail)
         val mlId = intent.getStringExtra(KEY_ML_ID)
         initData(mlId)
-
-
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun initData(mlId: String) {
@@ -67,6 +68,14 @@ class DetailActivity : BaseActivity() {
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun initView(detail: MiMeiDetail, miMei: MiMei) {
         val meiDetails = detail.dataMap
         for ((key, value) in meiDetails) {
@@ -74,6 +83,7 @@ class DetailActivity : BaseActivity() {
                 "福利" -> {
                     val title: String = miMei.title
                     val cardView = getMiMeiView(value[0].url, title)
+                    cardView.setOnClickListener { startImageActivity(value[0].url) }
                     contentLayout.addView(cardView, 0)
                 }
                 else -> {
@@ -86,19 +96,25 @@ class DetailActivity : BaseActivity() {
         }
     }
 
+    private fun startImageActivity(url: String) {
+        startActivity<ImageActivity>(ImageActivity.KEY_IMG_URL to url)
+    }
+
 
     private fun getMiMeiView(imageUrl: String, title: String): CardView {
         val imageView = ImageView(this)
         //根据屏幕尺寸,重新动态计算图片的宽高
         val size = doAsyncResult {
-            val bitmap = Picasso.get()
-                    .load(imageUrl)
-                    .get()
-            if (bitmap != null) {
-                val width = bitmap.width
-                val height = bitmap.height
-                if (width > height) {
-                }
+            var bitmap: Bitmap?
+            bitmap = try {
+                Picasso.get()
+                        .load(imageUrl)
+                        .get()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Picasso.get()
+                        .load(R.drawable.img_place_holder)
+                        .get()
             }
             listOf(bitmap.width, bitmap.height)
         }.get()
