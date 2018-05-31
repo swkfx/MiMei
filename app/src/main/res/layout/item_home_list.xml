@@ -3,7 +3,7 @@
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
                                     xmlns:tools="http://schemas.android.com/tools"
                                     android:layout_width="match_parent"
-                                    android:layout_height="200dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_margin="8dp"
                                     android:gravity="center_vertical"
                                     android:id="@+id/cv_list_item"
@@ -36,10 +36,11 @@
             tools:text="test~~"/>
 
         <ImageView
+            android:layout_centerHorizontal="true"
             android:layout_below="@id/title"
             android:id="@+id/image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
             android:layout_marginTop="8dp"
             android:src="@drawable/img_place_holder"/>
     </RelativeLayout>

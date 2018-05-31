@@ -4,11 +4,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import com.fangx.mimei.R
 import com.fangx.mimei.domain.model.MiMei
 import com.fangx.mimei.extensions.Utils
 import com.fangx.mimei.extensions.ctx
+import com.fangx.mimei.ui.base.App
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_home_list.view.*
 import org.jetbrains.anko.AnkoLogger
@@ -32,6 +32,13 @@ class HomeListAdapter(var data: ArrayList<MiMei>?) : RecyclerView.Adapter<HomeLi
 
         var targetWidth: Int = 0
         var targetHeight: Int = 0
+    }
+
+
+    init {
+        val metrics = App.instance.resources.displayMetrics
+        targetWidth = metrics.widthPixels - App.instance.dp2px(16)
+        targetHeight = App.instance.dp2px(150)
     }
 
     var loadMoreEnable: Boolean = false //是否需要加载更多.
@@ -101,32 +108,40 @@ class HomeListAdapter(var data: ArrayList<MiMei>?) : RecyclerView.Adapter<HomeLi
                 //这个是个耗时操作 不能放在这里做 会引起卡顿.
                 //val image_url: String = Jsoup.parse(item.content).selectFirst("img").attr("src")
                 val image = itemView.image
-                if (targetWidth * targetHeight == 0) {
-                    image.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-                        override fun onGlobalLayout() {
-                            targetWidth = image.measuredWidth
-                            targetHeight = image.measuredHeight
-                            info { "targetWidth = $targetWidth , targetHeight = $targetHeight" }
-                            image.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                            Picasso.get()
-                                    .load(item.imageUrl)
-                                    .placeholder(R.drawable.img_place_holder_2)
-                                    .resize(targetWidth, targetHeight)
-                                    .centerCrop()
-                                    .tag(itemView.ctx)
-                                    .into(image)
-                        }
-                    })
-                } else {
-                    Picasso.get()
-                            .load(item.imageUrl)
-                            .placeholder(R.drawable.img_place_holder_2)
-                            .resize(targetWidth, targetHeight)
-                            .centerCrop()
-                            .tag(itemView.ctx)
-                            .into(image)
+                //                if (targetWidth * targetHeight == 0) {
+                //                    image.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                //                        override fun onGlobalLayout() {
+                //                            targetWidth = image.measuredWidth
+                //                            targetHeight = image.measuredHeight
+                //                            info { "targetWidth = $targetWidth , targetHeight = $targetHeight" }
+                //                            image.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                //                            Picasso.get()
+                //                                    .load(item.imageUrl)
+                //                                    .placeholder(R.drawable.img_place_holder_2)
+                //                                    .resize(targetWidth, targetHeight)
+                //                                    .centerCrop()
+                //                                    .tag(itemView.ctx)
+                //                                    .into(image)
+                //                        }
+                //                    })
+                //                } else {
+                //                    Picasso.get()
+                //                            .load(item.imageUrl)
+                //                            .placeholder(R.drawable.img_place_holder_2)
+                //                            .resize(targetWidth, targetHeight)
+                //                            .centerCrop()
+                //                            .tag(itemView.ctx)
+                //                            .into(image)
+                //
+                //                }
 
-                }
+                Picasso.get()
+                        .load(item.imageUrl)
+                        .placeholder(R.drawable.img_place_holder_2)
+//                        .resize(targetWidth, targetHeight)
+//                        .centerCrop(Gravity.CENTER)
+                        .tag(itemView.ctx)
+                        .into(image)
                 itemView.ivCollect.isSelected = item.collect
 
                 //listener

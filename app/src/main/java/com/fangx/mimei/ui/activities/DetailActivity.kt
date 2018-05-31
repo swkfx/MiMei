@@ -6,6 +6,10 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.util.Pair
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.CardView
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -37,6 +41,7 @@ class DetailActivity : BaseActivity() {
 
     companion object {
         const val KEY_ML_ID = "key_ml_id"
+        const val KEY_SHARE_ID = "key_share_id"
     }
 
 
@@ -83,7 +88,16 @@ class DetailActivity : BaseActivity() {
                 "福利" -> {
                     val title: String = miMei.title
                     val cardView = getMiMeiView(value[0].url, title)
-                    cardView.setOnClickListener { startImageActivity(value[0].url) }
+                    cardView.setOnClickListener {
+//                        startImageActivity(value[0].url)
+
+                        val intent = Intent(this@DetailActivity, ImageActivity::class.java)
+                        intent.putExtra(ImageActivity.KEY_IMG_URL, value[0].url)
+                        val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this@DetailActivity,
+                                Pair(cardView.findViewById(R.id.mimei_image), KEY_SHARE_ID))
+                        ActivityCompat.startActivity(this@DetailActivity, intent, optionsCompat.toBundle())
+
+                    }
                     contentLayout.addView(cardView, 0)
                 }
                 else -> {
@@ -94,6 +108,16 @@ class DetailActivity : BaseActivity() {
                 }
             }
         }
+
+
+        val image = contentLayout.findViewById<ImageView>(R.id.mimei_image)
+        if (image != null) {
+            info { "image != null" }
+            ViewCompat.setTransitionName(image, KEY_SHARE_ID)
+        } else {
+            info { "image == null" }
+        }
+
     }
 
     private fun startImageActivity(url: String) {
@@ -103,6 +127,7 @@ class DetailActivity : BaseActivity() {
 
     private fun getMiMeiView(imageUrl: String, title: String): CardView {
         val imageView = ImageView(this)
+        imageView.id = R.id.mimei_image
         //根据屏幕尺寸,重新动态计算图片的宽高
         val size = doAsyncResult {
             var bitmap: Bitmap?
@@ -121,7 +146,7 @@ class DetailActivity : BaseActivity() {
         info {
             "width=${size[0]} , height=${size[1]}"
         }
-        val padding = (displayMetrics.density * 4).toInt()
+        val padding = (displayMetrics.density * 8).toInt()
         val margin = (displayMetrics.density * 12).toInt()
         val imageTargetWidth = displayMetrics.widthPixels - (margin + padding) * 2
         val scale: Float = imageTargetWidth / size[0].toFloat()
@@ -139,6 +164,7 @@ class DetailActivity : BaseActivity() {
         //                    layoutParams.gravity = Gravity.CENTER
         layoutParams.margin = margin
         val cardView = CardView(this)
+        cardView.id = R.id.card_view
         cardView.layoutParams = layoutParams
         cardView.setContentPadding(padding, padding, padding, padding)
         val container = LinearLayout(this)
@@ -146,6 +172,8 @@ class DetailActivity : BaseActivity() {
         container.addView(getTitleView(title))
         container.addView(imageView)
         cardView.addView(container)
+
+        ViewCompat.setTransitionName(imageView, KEY_SHARE_ID)
         return cardView
     }
 

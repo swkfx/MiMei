@@ -3,6 +3,7 @@ package com.fangx.mimei.ui.activities
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
+import android.support.v4.view.ViewCompat
 import android.view.MenuItem
 import android.view.View
 import com.fangx.mimei.R
@@ -68,6 +69,9 @@ class ImageActivity : BaseActivity() {
         // while interacting with the UI.
 //        dummy_button.setOnTouchListener(mDelayHideTouchListener)
 
+        ViewCompat.setTransitionName(fullscreen_content, DetailActivity.KEY_SHARE_ID)
+
+
         val url = intent.getStringExtra(KEY_IMG_URL)
         info {
             "url = $url"
@@ -101,9 +105,10 @@ class ImageActivity : BaseActivity() {
         info {
             "scale=$scale , imageTargetWidth=$imageTargetWidth , imageTargetHeight=$imageTargetHeight"
         }
+        //        fullscreen_content.layoutParams = ViewGroup.LayoutParams(imageTargetHeight, imageTargetHeight)
         Picasso.get()
                 .load(imageUrl)
-                .placeholder(R.drawable.img_place_holder)
+                .error(R.drawable.img_place_holder)
                 .resize(imageTargetWidth, imageTargetHeight)
                 .centerCrop()
                 .into(fullscreen_content)
@@ -111,6 +116,8 @@ class ImageActivity : BaseActivity() {
         fullscreen_content.setOnClickListener{
             onBackPressed()
         }
+
+
     }
 
 //    override fun onPostCreate(savedInstanceState: Bundle?) {

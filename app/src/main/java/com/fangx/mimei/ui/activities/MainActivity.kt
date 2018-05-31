@@ -1,6 +1,10 @@
 package com.fangx.mimei.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.util.Pair
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING
@@ -13,7 +17,11 @@ import com.fangx.mimei.ui.adapters.HomeListAdapter
 import com.fangx.mimei.ui.base.BaseActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.*
+import kotlinx.android.synthetic.main.item_home_list.view.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.info
+import org.jetbrains.anko.toast
+import org.jetbrains.anko.uiThread
 
 class MainActivity : BaseActivity() {
 
@@ -98,7 +106,16 @@ class MainActivity : BaseActivity() {
                 R.id.cv_list_item -> { //click item
                     //启动详情页
                     val item = homeListAdapter.data?.get(position)
-                    startActivity<DetailActivity>(DetailActivity.KEY_ML_ID to item?.ml_id)
+                    //                    startActivity<DetailActivity>(DetailActivity.KEY_ML_ID to item?.ml_id)
+
+
+                    val intent = Intent(this@MainActivity, DetailActivity::class.java)
+                    intent.putExtra(DetailActivity.KEY_ML_ID, item?.ml_id)
+                    val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this@MainActivity,
+                            Pair(view.image, DetailActivity.KEY_SHARE_ID))
+                    ActivityCompat.startActivity(this@MainActivity, intent, optionsCompat.toBundle())
+
+
                 }
                 R.id.ivCollect -> {
                     val item = homeListAdapter.data?.get(position)

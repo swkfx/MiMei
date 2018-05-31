@@ -23,5 +23,9 @@ class App : Application() {
 
     }
 
+    fun dp2px(dp: Int): Int {
+        return (resources.displayMetrics.density * dp + .5).toInt()
+    }
+
 
 }
